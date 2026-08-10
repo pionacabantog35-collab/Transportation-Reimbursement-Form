@@ -1,0 +1,1057 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Transportation Reimbursement Form</title>
+<style>
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  :root {
+    --gold: #B8860B;
+    --gold-light: #D4A94C;
+    --gold-pale: #FBF4E3;
+    --gold-dark: #8A6508;
+    --ink: #2B2620;
+    --muted: #8A8172;
+    --line: #EAE2D0;
+    --line-soft: #F3EDDF;
+    --surface: #FFFFFF;
+    --bg: #FAF8F3;
+    --danger: #C0392B;
+    --danger-soft: #FBEAE8;
+    --success-soft: #F1F8EC;
+    --success-ink: #4F7942;
+    --radius: 14px;
+    --radius-sm: 10px;
+    --font: 'Inter', 'Segoe UI', system-ui, -apple-system, Arial, sans-serif;
+    --mono: 'IBM Plex Mono', 'SFMono-Regular', 'Consolas', monospace;
+  }
+
+  body {
+    font-family: var(--font);
+    background: var(--bg);
+    padding: 40px 16px;
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .form-wrapper {
+    max-width: 1040px;
+    margin: 0 auto;
+    background: var(--surface);
+    border-radius: var(--radius);
+    box-shadow: 0 1px 2px rgba(138,101,8,0.05), 0 16px 40px -18px rgba(138,101,8,0.22);
+    overflow: hidden;
+    border: 1px solid var(--line);
+  }
+
+  /* Header */
+  .form-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--surface);
+    padding: 28px 40px;
+    border-bottom: 1px solid var(--line);
+    flex-wrap: wrap;
+    gap: 18px;
+  }
+
+  .logo-placeholder {
+    height: 92px;
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+  }
+
+  .logo-placeholder img {
+    height: 100%;
+    width: auto;
+    object-fit: contain;
+  }
+
+  .header-title {
+    text-align: right;
+    flex: 1;
+    min-width: 260px;
+  }
+
+  .header-title h1 {
+    font-size: 20px;
+    letter-spacing: -0.01em;
+    font-weight: 700;
+    line-height: 1.3;
+    color: var(--gold-dark);
+  }
+
+  .header-title .accent-line {
+    height: 3px;
+    width: 44px;
+    margin-left: auto;
+    margin-top: 10px;
+    background: var(--gold);
+    border-radius: 2px;
+  }
+
+  /* Sections */
+  .section {
+    padding: 28px 40px;
+    border-bottom: 1px solid var(--line-soft);
+  }
+
+  .section-title {
+    font-size: 12.5px;
+    font-weight: 700;
+    color: var(--gold-dark);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .section-title::before {
+    content: "";
+    width: 8px;
+    height: 8px;
+    border-radius: 2px;
+    background: var(--gold);
+    display: inline-block;
+  }
+
+  .employee-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px 24px;
+  }
+
+  .field-group {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .field-group label {
+    font-size: 12.5px;
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: var(--muted);
+    letter-spacing: 0.01em;
+  }
+
+  .field-group label .required {
+    color: var(--danger);
+    margin-left: 3px;
+  }
+
+  .field-group input,
+  .field-group select {
+    padding: 10px 12px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    font-family: inherit;
+    background: var(--surface);
+    color: var(--ink);
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+
+  .field-group input:focus,
+  .field-group select:focus {
+    outline: none;
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(184,134,11,0.14);
+  }
+
+  .field-group input.invalid,
+  .field-group select.invalid {
+    border-color: var(--danger);
+    box-shadow: 0 0 0 3px rgba(192,57,43,0.10);
+  }
+
+  .error-msg {
+    color: var(--danger);
+    font-size: 12px;
+    margin-top: 4px;
+    display: none;
+    font-weight: 500;
+  }
+
+  .error-msg.show {
+    display: block;
+  }
+
+  /* Signature pad */
+  .field-group-signature {
+    grid-column: 1 / -1;
+    max-width: 340px;
+  }
+
+  .signature-pad-wrapper {
+    position: relative;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    background: var(--surface);
+    background-image: linear-gradient(var(--line-soft) 1px, transparent 1px);
+    background-size: 100% 1px;
+    background-position: 0 bottom 18px;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+
+  .signature-pad-wrapper:focus-within {
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(184,134,11,0.14);
+  }
+
+  #signatureCanvas {
+    display: block;
+    width: 100%;
+    height: 80px;
+    cursor: crosshair;
+    touch-action: none;
+    border-radius: var(--radius-sm);
+  }
+
+  .signature-placeholder {
+    position: absolute;
+    left: 12px;
+    bottom: 8px;
+    font-size: 12px;
+    color: var(--muted);
+    pointer-events: none;
+    font-style: italic;
+  }
+
+  .signature-placeholder.hidden {
+    display: none;
+  }
+
+  .sig-clear-btn {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    background: var(--surface);
+    color: var(--gold-dark);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 3px 11px;
+    font-size: 11px;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+  }
+
+  .sig-clear-btn:hover {
+    background: var(--gold-pale);
+    border-color: var(--gold-light);
+  }
+
+  /* Table - modern card-row layout */
+  .table-scroll {
+    overflow-x: auto;
+    padding-bottom: 2px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 8px;
+    min-width: 780px;
+  }
+
+  thead th {
+    background: transparent;
+    color: var(--gold-dark);
+    font-size: 11.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    padding: 0 12px 10px;
+    text-align: left;
+    white-space: nowrap;
+    border-bottom: 2px solid var(--gold);
+  }
+
+  tbody td {
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    padding: 6px;
+    background: var(--surface);
+  }
+
+  tbody td:first-child {
+    border-left: 1px solid var(--line);
+    border-top-left-radius: var(--radius-sm);
+    border-bottom-left-radius: var(--radius-sm);
+  }
+
+  tbody td:last-child {
+    border-right: 1px solid var(--line);
+    border-top-right-radius: var(--radius-sm);
+    border-bottom-right-radius: var(--radius-sm);
+  }
+
+  tbody tr:hover td {
+    background: var(--gold-pale);
+    border-color: var(--gold-light);
+  }
+
+  tbody td input,
+  tbody td select {
+    width: 100%;
+    border: 1px solid transparent;
+    padding: 9px 8px;
+    font-size: 13.5px;
+    font-family: inherit;
+    border-radius: 6px;
+    background: transparent;
+    color: var(--ink);
+  }
+
+  tbody td input:focus,
+  tbody td select:focus {
+    outline: none;
+    border-color: var(--gold);
+    background: var(--surface);
+    box-shadow: 0 0 0 2px rgba(184,134,11,0.14);
+  }
+
+  tbody td .amount-input {
+    text-align: right;
+    font-weight: 600;
+    font-family: var(--mono);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .remove-btn {
+    background: transparent;
+    color: var(--muted);
+    border: 1px solid var(--line);
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+  }
+
+  .remove-btn:hover {
+    background: var(--danger-soft);
+    color: var(--danger);
+    border-color: var(--danger);
+  }
+
+  tfoot td {
+    padding: 14px 16px;
+    font-weight: 700;
+    background: var(--gold-pale);
+    border: 1px solid var(--gold-light);
+  }
+
+  tfoot tr td:first-child {
+    border-top-left-radius: var(--radius-sm);
+    border-bottom-left-radius: var(--radius-sm);
+    border-right: none;
+  }
+
+  tfoot tr td:last-child {
+    border-top-right-radius: var(--radius-sm);
+    border-bottom-right-radius: var(--radius-sm);
+    border-left: none;
+  }
+
+  .total-label {
+    text-align: right;
+    font-size: 12px;
+    color: var(--gold-dark);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-weight: 700;
+  }
+
+  .total-value {
+    font-size: 19px;
+    color: var(--gold-dark);
+    text-align: right;
+    font-weight: 800;
+    font-family: var(--mono);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Buttons */
+  .table-actions {
+    margin-top: 14px;
+    display: flex;
+    justify-content: flex-start;
+  }
+
+  .btn {
+    padding: 10px 20px;
+    border-radius: var(--radius-sm);
+    border: none;
+    font-size: 14px;
+    font-family: inherit;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.05s, box-shadow 0.15s, background 0.15s, opacity 0.15s;
+    letter-spacing: 0.01em;
+  }
+
+  .btn:active {
+    transform: translateY(1px);
+  }
+
+  .btn-add {
+    background: var(--surface);
+    color: var(--gold-dark);
+    border: 1.5px dashed var(--gold-light);
+  }
+
+  .btn-add:hover {
+    background: var(--gold-pale);
+    border-style: solid;
+    border-color: var(--gold);
+  }
+
+  .btn-submit {
+    background: var(--gold);
+    color: #fff;
+    box-shadow: 0 1px 2px rgba(138,101,8,0.3);
+  }
+
+  .btn-submit:hover {
+    background: var(--gold-dark);
+  }
+
+  .btn-reset {
+    background: transparent;
+    color: var(--muted);
+    border: 1px solid var(--line);
+  }
+
+  .btn-reset:hover {
+    background: var(--line-soft);
+    color: var(--ink);
+  }
+
+  .form-footer-actions {
+    padding: 24px 40px 34px;
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+  }
+
+  .status-banner {
+    margin: 0 40px 0;
+    padding: 13px 16px;
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    font-weight: 600;
+    display: none;
+  }
+
+  .status-banner.show {
+    display: block;
+  }
+
+  .status-banner.success {
+    background: var(--success-soft);
+    color: var(--success-ink);
+    border: 1px solid rgba(79,121,66,0.2);
+  }
+
+  .status-banner.error {
+    background: var(--danger-soft);
+    color: var(--danger);
+    border: 1px solid rgba(192,57,43,0.2);
+  }
+
+  /* Receipt upload */
+  .upload-dropzone {
+    border: 1.5px dashed var(--gold-light);
+    border-radius: var(--radius-sm);
+    padding: 22px 18px;
+    text-align: center;
+    background: var(--gold-pale);
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+  }
+
+  .upload-dropzone:hover,
+  .upload-dropzone.dragover {
+    border-color: var(--gold);
+    background: #F6E9CC;
+  }
+
+  .upload-dropzone .upload-icon {
+    font-size: 22px;
+    color: var(--gold-dark);
+    margin-bottom: 6px;
+  }
+
+  .upload-dropzone .upload-text {
+    font-size: 13.5px;
+    color: var(--ink);
+    font-weight: 600;
+  }
+
+  .upload-dropzone .upload-subtext {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+
+  #receiptFileInput {
+    display: none;
+  }
+
+  .receipt-list {
+    margin-top: 16px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+    gap: 12px;
+  }
+
+  .receipt-item {
+    position: relative;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    background: var(--surface);
+    aspect-ratio: 1 / 1;
+  }
+
+  .receipt-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .receipt-item .receipt-file-icon {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 11px;
+    color: var(--gold-dark);
+    padding: 8px;
+    text-align: center;
+    word-break: break-word;
+  }
+
+  .receipt-item .receipt-remove {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: rgba(43,38,32,0.65);
+    color: #fff;
+    border: none;
+    font-size: 13px;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .receipt-item .receipt-remove:hover {
+    background: var(--danger);
+  }
+
+  @media (max-width: 640px) {
+    .employee-grid {
+      grid-template-columns: 1fr;
+    }
+    .field-group-signature {
+      max-width: 100%;
+    }
+    .header-title {
+      text-align: left;
+    }
+    .header-title .accent-line {
+      margin-left: 0;
+    }
+    .form-header {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .form-footer-actions {
+      justify-content: stretch;
+    }
+    .form-footer-actions .btn {
+      flex: 1;
+    }
+  }
+</style>
+
+</head>
+<body>
+
+<div class="form-wrapper">
+
+  <!-- Header -->
+  <div class="form-header">
+    <div class="logo-placeholder">
+      <img src="data:image/png;base64,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" alt="Urban Smiles Dental Clinic Logo">
+    </div>
+    <div class="header-title">
+      <h1>TRANSPORTATION REIMBURSEMENT FORM</h1>
+      <div class="accent-line"></div>
+    </div>
+  </div>
+
+  <div id="statusBanner" class="status-banner"></div>
+
+  <!-- Employee Information -->
+  <div class="section">
+    <div class="section-title">Employee Information</div>
+    <div class="employee-grid">
+      <div class="field-group">
+        <label for="employeeName">Employee Name<span class="required">*</span></label>
+        <input type="text" id="employeeName" placeholder="Enter full name">
+        <span class="error-msg" id="employeeNameError">Employee Name is required.</span>
+      </div>
+
+      <div class="field-group">
+        <label for="department">Department<span class="required">*</span></label>
+        <input type="text" id="department" placeholder="Enter department">
+        <span class="error-msg" id="departmentError">Department is required.</span>
+      </div>
+
+      <div class="field-group">
+        <label for="dateSubmitted">Date Submitted<span class="required">*</span></label>
+        <input type="date" id="dateSubmitted">
+        <span class="error-msg" id="dateSubmittedError">Date Submitted is required.</span>
+      </div>
+
+      <div class="field-group field-group-signature">
+        <label for="signatureCanvas">Signature</label>
+        <div class="signature-pad-wrapper">
+          <canvas id="signatureCanvas"></canvas>
+          <span class="signature-placeholder" id="signaturePlaceholder">Sign here</span>
+          <button type="button" class="sig-clear-btn" id="clearSignatureBtn">Clear</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Receipt Attachments -->
+  <div class="section">
+    <div class="section-title">Receipt Attachments</div>
+
+    <div class="upload-dropzone" id="uploadDropzone">
+      <div class="upload-icon">&#128206;</div>
+      <div class="upload-text">Click to upload or drag photos here</div>
+      <div class="upload-subtext">JPG, PNG, HEIC or PDF — multiple files allowed</div>
+      <input type="file" id="receiptFileInput" accept="image/*,application/pdf" multiple>
+    </div>
+
+    <div class="receipt-list" id="receiptList"></div>
+  </div>
+
+  <!-- Transportation Details -->
+  <div class="section">
+    <div class="section-title">Transportation Details</div>
+
+    <div class="table-scroll">
+      <table id="transportTable">
+        <thead>
+          <tr>
+            <th style="width:12%">Date</th>
+            <th style="width:16%">Type of Transportation</th>
+            <th style="width:15%">From</th>
+            <th style="width:15%">To</th>
+            <th style="width:22%">Reason</th>
+            <th style="width:14%">Amount (₱)</th>
+            <th style="width:6%"></th>
+          </tr>
+        </thead>
+        <tbody id="tableBody">
+          <!-- rows injected by JS -->
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="5" class="total-label">Grand Total</td>
+            <td class="total-value" id="grandTotal">₱0.00</td>
+            <td></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+    <span class="error-msg" id="entriesError">At least one complete transportation entry (Date, Type, From, To, Reason and Amount) is required.</span>
+
+    <div class="table-actions">
+      <button type="button" class="btn btn-add" id="addRowBtn">+ Add Row</button>
+    </div>
+  </div>
+
+  <!-- Actions -->
+  <div class="form-footer-actions">
+    <button type="button" class="btn btn-reset" id="resetBtn">Reset Form</button>
+    <button type="button" class="btn btn-submit" id="submitBtn">Submit Request</button>
+  </div>
+
+</div>
+
+<script>
+  const tableBody = document.getElementById('tableBody');
+  const addRowBtn = document.getElementById('addRowBtn');
+  const grandTotalEl = document.getElementById('grandTotal');
+  const submitBtn = document.getElementById('submitBtn');
+  const resetBtn = document.getElementById('resetBtn');
+  const statusBanner = document.getElementById('statusBanner');
+  const entriesError = document.getElementById('entriesError');
+
+  function createRow() {
+    const row = document.createElement('tr');
+    row.innerHTML = `
+      <td><input type="date" class="row-date"></td>
+      <td><input type="text" class="row-type" placeholder="e.g. Taxi, Bus, Grab"></td>
+      <td><input type="text" class="row-from" placeholder="Origin"></td>
+      <td><input type="text" class="row-to" placeholder="Destination"></td>
+      <td><input type="text" class="row-reason" placeholder="Purpose of travel"></td>
+      <td><input type="text" inputmode="decimal" class="row-amount amount-input" placeholder="0.00"></td>
+      <td><button type="button" class="remove-btn" title="Remove row">&times;</button></td>
+    `;
+    tableBody.appendChild(row);
+    attachRowEvents(row);
+  }
+
+  function attachRowEvents(row) {
+    const amountInput = row.querySelector('.row-amount');
+    const removeBtn = row.querySelector('.remove-btn');
+
+    amountInput.addEventListener('input', function () {
+      let val = this.value.replace(/[^0-9.]/g, '');
+      const parts = val.split('.');
+      if (parts.length > 2) {
+        val = parts[0] + '.' + parts.slice(1).join('');
+      }
+      this.value = val;
+      calculateGrandTotal();
+    });
+
+    amountInput.addEventListener('blur', function () {
+      if (this.value !== '' && !isNaN(parseFloat(this.value))) {
+        this.value = parseFloat(this.value).toFixed(2);
+        calculateGrandTotal();
+      }
+    });
+
+    removeBtn.addEventListener('click', function () {
+      if (tableBody.querySelectorAll('tr').length > 1) {
+        row.remove();
+        calculateGrandTotal();
+      } else {
+        row.querySelectorAll('input').forEach(i => i.value = '');
+        calculateGrandTotal();
+      }
+    });
+  }
+
+  function calculateGrandTotal() {
+    const amounts = document.querySelectorAll('.row-amount');
+    let total = 0;
+    amounts.forEach(a => {
+      const val = parseFloat(a.value);
+      if (!isNaN(val)) total += val;
+    });
+    grandTotalEl.textContent = '₱' + total.toFixed(2);
+    return total;
+  }
+
+  function initRows(count) {
+    for (let i = 0; i < count; i++) {
+      createRow();
+    }
+  }
+
+  addRowBtn.addEventListener('click', () => createRow());
+
+  // ---- Receipt upload ----
+  const uploadDropzone = document.getElementById('uploadDropzone');
+  const receiptFileInput = document.getElementById('receiptFileInput');
+  const receiptList = document.getElementById('receiptList');
+  let receiptFiles = [];
+
+  uploadDropzone.addEventListener('click', () => receiptFileInput.click());
+
+  ['dragover', 'dragenter'].forEach(evt => {
+    uploadDropzone.addEventListener(evt, (e) => {
+      e.preventDefault();
+      uploadDropzone.classList.add('dragover');
+    });
+  });
+  ['dragleave', 'drop'].forEach(evt => {
+    uploadDropzone.addEventListener(evt, (e) => {
+      e.preventDefault();
+      uploadDropzone.classList.remove('dragover');
+    });
+  });
+  uploadDropzone.addEventListener('drop', (e) => {
+    if (e.dataTransfer.files.length) {
+      addReceiptFiles(e.dataTransfer.files);
+    }
+  });
+
+  receiptFileInput.addEventListener('change', function () {
+    if (this.files.length) {
+      addReceiptFiles(this.files);
+    }
+    this.value = '';
+  });
+
+  function addReceiptFiles(fileListObj) {
+    Array.from(fileListObj).forEach(file => {
+      receiptFiles.push(file);
+      renderReceiptItem(file);
+    });
+  }
+
+  function renderReceiptItem(file) {
+    const item = document.createElement('div');
+    item.className = 'receipt-item';
+
+    const removeBtn = document.createElement('button');
+    removeBtn.type = 'button';
+    removeBtn.className = 'receipt-remove';
+    removeBtn.innerHTML = '&times;';
+    removeBtn.title = 'Remove';
+    removeBtn.addEventListener('click', () => {
+      receiptFiles = receiptFiles.filter(f => f !== file);
+      item.remove();
+    });
+
+    if (file.type.startsWith('image/')) {
+      const img = document.createElement('img');
+      const reader = new FileReader();
+      reader.onload = (e) => { img.src = e.target.result; };
+      reader.readAsDataURL(file);
+      item.appendChild(img);
+    } else {
+      const icon = document.createElement('div');
+      icon.className = 'receipt-file-icon';
+      icon.innerHTML = '&#128196;<span>' + file.name + '</span>';
+      item.appendChild(icon);
+    }
+
+    item.appendChild(removeBtn);
+    receiptList.appendChild(item);
+  }
+
+  function clearReceiptFiles() {
+    receiptFiles = [];
+    receiptList.innerHTML = '';
+  }
+
+  // Field validation helpers
+  function setInvalid(el, errorEl, isInvalid) {
+    if (isInvalid) {
+      el.classList.add('invalid');
+      if (errorEl) errorEl.classList.add('show');
+    } else {
+      el.classList.remove('invalid');
+      if (errorEl) errorEl.classList.remove('show');
+    }
+  }
+
+  function showBanner(message, type) {
+    statusBanner.textContent = message;
+    statusBanner.className = 'status-banner show ' + type;
+    statusBanner.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function hideBanner() {
+    statusBanner.className = 'status-banner';
+    statusBanner.textContent = '';
+  }
+
+  function validateForm() {
+    let isValid = true;
+
+    const nameInput = document.getElementById('employeeName');
+    const nameError = document.getElementById('employeeNameError');
+    if (!nameInput.value.trim()) {
+      setInvalid(nameInput, nameError, true);
+      isValid = false;
+    } else {
+      setInvalid(nameInput, nameError, false);
+    }
+
+    const deptInput = document.getElementById('department');
+    const deptError = document.getElementById('departmentError');
+    if (!deptInput.value.trim()) {
+      setInvalid(deptInput, deptError, true);
+      isValid = false;
+    } else {
+      setInvalid(deptInput, deptError, false);
+    }
+
+    const dateInput = document.getElementById('dateSubmitted');
+    const dateError = document.getElementById('dateSubmittedError');
+    if (!dateInput.value) {
+      setInvalid(dateInput, dateError, true);
+      isValid = false;
+    } else {
+      setInvalid(dateInput, dateError, false);
+    }
+
+    const rows = tableBody.querySelectorAll('tr');
+    let hasCompleteEntry = false;
+    rows.forEach(row => {
+      const date = row.querySelector('.row-date').value;
+      const type = row.querySelector('.row-type').value;
+      const from = row.querySelector('.row-from').value.trim();
+      const to = row.querySelector('.row-to').value.trim();
+      const reason = row.querySelector('.row-reason').value.trim();
+      const amount = row.querySelector('.row-amount').value;
+
+      if (date && type && from && to && reason && amount && !isNaN(parseFloat(amount)) && parseFloat(amount) > 0) {
+        hasCompleteEntry = true;
+      }
+    });
+
+    if (!hasCompleteEntry) {
+      entriesError.classList.add('show');
+      isValid = false;
+    } else {
+      entriesError.classList.remove('show');
+    }
+
+    return isValid;
+  }
+
+  submitBtn.addEventListener('click', function () {
+    hideBanner();
+    if (validateForm()) {
+      const total = calculateGrandTotal();
+      const name = document.getElementById('employeeName').value.trim();
+      const receiptNote = receiptFiles.length ? ` ${receiptFiles.length} receipt(s) attached.` : '';
+      showBanner(`Request submitted successfully for ${name}. Grand Total: ₱${total.toFixed(2)}.${receiptNote}`, 'success');
+    } else {
+      showBanner('Please complete all required fields and at least one transportation entry before submitting.', 'error');
+    }
+  });
+
+  resetBtn.addEventListener('click', function () {
+    document.getElementById('employeeName').value = '';
+    document.getElementById('department').value = '';
+    document.getElementById('dateSubmitted').value = '';
+    clearSignature();
+    clearReceiptFiles();
+
+    setInvalid(document.getElementById('employeeName'), document.getElementById('employeeNameError'), false);
+    setInvalid(document.getElementById('department'), document.getElementById('departmentError'), false);
+    setInvalid(document.getElementById('dateSubmitted'), document.getElementById('dateSubmittedError'), false);
+    entriesError.classList.remove('show');
+    hideBanner();
+
+    tableBody.innerHTML = '';
+    initRows(5);
+    calculateGrandTotal();
+  });
+
+  document.getElementById('employeeName').addEventListener('input', function () {
+    if (this.value.trim()) setInvalid(this, document.getElementById('employeeNameError'), false);
+  });
+  document.getElementById('department').addEventListener('input', function () {
+    if (this.value.trim()) setInvalid(this, document.getElementById('departmentError'), false);
+  });
+  document.getElementById('dateSubmitted').addEventListener('change', function () {
+    if (this.value) setInvalid(this, document.getElementById('dateSubmittedError'), false);
+  });
+
+  // E-signature pad
+  const sigCanvas = document.getElementById('signatureCanvas');
+  const sigCtx = sigCanvas.getContext('2d');
+  const sigPlaceholder = document.getElementById('signaturePlaceholder');
+  const clearSignatureBtn = document.getElementById('clearSignatureBtn');
+  let isDrawing = false;
+  let hasSignature = false;
+
+  function sizeSignatureCanvas() {
+    const rect = sigCanvas.getBoundingClientRect();
+    const dpr = window.devicePixelRatio || 1;
+    const preserved = hasSignature ? sigCanvas.toDataURL() : null;
+    sigCanvas.width = rect.width * dpr;
+    sigCanvas.height = rect.height * dpr;
+    sigCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    sigCtx.lineWidth = 1.75;
+    sigCtx.lineCap = 'round';
+    sigCtx.lineJoin = 'round';
+    sigCtx.strokeStyle = '#2B2620';
+    if (preserved) {
+      const img = new Image();
+      img.onload = () => sigCtx.drawImage(img, 0, 0, rect.width, rect.height);
+      img.src = preserved;
+    }
+  }
+
+  function sigPointerPos(e) {
+    const rect = sigCanvas.getBoundingClientRect();
+    return { x: e.clientX - rect.left, y: e.clientY - rect.top };
+  }
+
+  function startSignature(e) {
+    isDrawing = true;
+    hasSignature = true;
+    sigPlaceholder.classList.add('hidden');
+    const pos = sigPointerPos(e);
+    sigCtx.beginPath();
+    sigCtx.moveTo(pos.x, pos.y);
+    e.preventDefault();
+  }
+
+  function moveSignature(e) {
+    if (!isDrawing) return;
+    const pos = sigPointerPos(e);
+    sigCtx.lineTo(pos.x, pos.y);
+    sigCtx.stroke();
+    e.preventDefault();
+  }
+
+  function stopSignature() {
+    isDrawing = false;
+  }
+
+  function clearSignature() {
+    hasSignature = false;
+    sigCtx.clearRect(0, 0, sigCanvas.width, sigCanvas.height);
+    sigPlaceholder.classList.remove('hidden');
+  }
+
+  sigCanvas.addEventListener('pointerdown', startSignature);
+  sigCanvas.addEventListener('pointermove', moveSignature);
+  window.addEventListener('pointerup', stopSignature);
+  window.addEventListener('resize', sizeSignatureCanvas);
+  clearSignatureBtn.addEventListener('click', clearSignature);
+
+  sizeSignatureCanvas();
+
+  // Init
+  initRows(5);
+  calculateGrandTotal();
+</script>
+
+</body>
+</html>
